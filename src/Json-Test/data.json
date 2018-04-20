@@ -1,0 +1,9 @@
+{
+    "status"  : 200,
+    "payload" : 
+    {
+        "campo-uno" : "dato-1",
+        "campo-dos" : "dato-2",
+        "campo-tres" : "dato-3"
+    }
+}

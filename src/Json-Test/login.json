@@ -1,0 +1,9 @@
+{
+    "status"  : 200,
+    "payload" : 
+    {
+        "subject"  : "user-test",
+        "realm"    : "test",
+        "message"  : "login ok"        
+    }
+}

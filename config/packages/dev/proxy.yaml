@@ -1,0 +1,5 @@
+parameters:
+   app.proxy_list:
+     'servicio-1': 'http://localhost/ds'
+     'servicio-2': 456
+     'api-test'  : '%env(LOCALHOST)%/test'
