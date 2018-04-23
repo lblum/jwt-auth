@@ -6,7 +6,7 @@ use GuzzleHttp\Client;
 use App\Test\JsonApiTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class QQTest extends JsonApiTestCase
+class TokenTest extends JsonApiTestCase
 {
     public function testCreateToken()
     {
