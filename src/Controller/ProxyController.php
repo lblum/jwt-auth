@@ -41,7 +41,8 @@ class ProxyController extends BaseController
             getenv("AUTH_PREFIX"),
             getenv("AUTH_HEADER")
         );
-        $token = $extractor->extract($request);
+        $hdr = $request->headers->all()[getenv("AUTH_HEADER")][0];
+        $token = preg_replace("/^" . getenv("AUTH_PREFIX") . "/","",$hdr,1);
         // Si no existe -> HTTP_UNAUTHORIZED (401)
         if (!$token) {
             return false;
@@ -51,11 +52,10 @@ class ProxyController extends BaseController
         try {
             $data = $this->jwtEncoder->decode($token);
         } catch (JWTDecodeFailureException $e) {
-            //throw new CustomUserMessageAuthenticationException("Token inválido (" . $e->getReason() . ")");
             return false;
         }
 
         // Si llego acá, todo OK
-        return $true;
+        return true;
     }
 }
