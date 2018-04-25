@@ -1,7 +1,10 @@
-php 7.2 en centos 7
+﻿php 7.2 en centos 7
 
 https://wiki.centos.org/HowTos/php7
 
+-- Adicionales
+yum install net-tools git httpd
+systemctl enable httpd.service
 
 -- Certificados
 mkdir config/jwt
@@ -9,6 +12,16 @@ openssl genrsa -out config/jwt/private.pem -aes256 4096
 openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
 
 En Bash para windows, agregar winpty antes de openssl
+
+
+En httpd.config
+
+DocumentRoot "/var/www/html/jwt-auth/public"
+<Directory "/var/www/html/jwt-auth/public">
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>
 
 lexik_jwt_authentication:
     private_key_path: %kernel.root_dir%/../var/jwt/private.pem
