@@ -5,7 +5,6 @@ parameters:
          'forward-url' : '%env(LOCALHOST)%/test'
          # Headers adicionales (fundamentalmente para autorización básica)
          'headers-extra' : 
-            'WWW-Authenticate': Basic realm="foo", charset="UTF-8"
             # El usuario y password van en formato base64
             # Usuario: pass -> base 64
             # https://www.base64encode.org
