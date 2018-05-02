@@ -41,8 +41,7 @@ class ProxyController extends BaseController
             getenv("AUTH_PREFIX"),
             getenv("AUTH_HEADER")
         );
-        $hdr = $request->headers->all()[getenv("AUTH_HEADER")][0];
-        $token = preg_replace("/^" . getenv("AUTH_PREFIX") . "/","",$hdr,1);
+        $token = $extractor->extract($request);
         // Si no existe -> HTTP_UNAUTHORIZED (401)
         if (!$token) {
             return false;
