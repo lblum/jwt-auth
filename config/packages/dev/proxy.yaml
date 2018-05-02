@@ -1,5 +1,12 @@
 parameters:
    app.proxy_list:
-     'servicio-1': 'http://localhost/ds'
-     'servicio-2': 456
-     'api-test'  : '%env(LOCALHOST)%/test'
+      'api-test'  :
+         # Dirección remota
+         'forward-url' : '%env(LOCALHOST)%/test'
+         # Headers adicionales (fundamentalmente para autorización básica)
+         'headers-extra' : 
+            'WWW-Authenticate': Basic realm="foo", charset="UTF-8"
+            # El usuario y password van en formato base64
+            # Usuario: pass -> base 64
+            # https://www.base64encode.org
+            'Authorization'   : Basic dXN1YXJpbzogcGFzc3dvcmQ=

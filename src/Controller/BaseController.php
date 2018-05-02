@@ -56,24 +56,33 @@ class BaseController extends Controller
     {
         // Traduzco el servicio a la nueva URl
         $proxyList = $this->getParameter("app.proxy_list");
-        if ( array_search($service,array_keys($proxyList),true) === false )
+        if ( array_key_exists($service,$proxyList) === false )
             throw $this->createNotFoundException("Servicio $service no encontrado (¿falta configuración?)");
 
         // Saco los prefijos sobrantes
         $route = $this->getDestURI($service,$req->getRequestUri());
 
         // Preparo los headers a enviar
-        // TODO: es necesario enviar el header de Authorization?        
         $headers = [];
         foreach($req->headers->all() as $key=>$val)
             $headers[] = "$key:" . $val[0];
+        // Agrego los headers extra
+        if ( array_key_exists ("headers-extra",$proxyList[$service]) !== false ) {
+            foreach($proxyList[$service]["headers-extra"] as $key=>$val ) {
+                if ( array_key_exists($key,$req->headers->all()) === false ) {
+                    $headers[] = "$key:" . $val;
+                }
+            }
+        }
+        
         $client = new Client([
             "body"    => $req->getContent(),
             "headers" => $headers
         ]);
         try {
+            $forwardUrl = $proxyList[$service]["forward-url"];
             // El envío propiamente dicho
-            $resp = $client->request($req->getMethod(), $proxyList[$service] . $route);
+            $resp = $client->request($req->getMethod() , $forwardUrl . $route);
             
             $body = $resp->getBody();
             $statusCode = $resp->getStatusCode();
