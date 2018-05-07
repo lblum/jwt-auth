@@ -78,17 +78,16 @@ class BaseController extends Controller
                         $header .= $piece["text"];
                     }
                 }
-                die($header);
                 if ( array_key_exists($key,$req->headers->all()) === false ) {
                     $headers[] = $header;
                 }
             }
         }
-        
-        $client = new Client([
-            "body"    => $req->getContent(),
-            "headers" => $headers
-        ]);
+        $clientConfig = $this->getParameter("app.proxy.client.config");
+        $clientConfig["body"] = $req->getContent();
+        $clientConfig["headers"] = $headers;
+    
+        $client = new Client($clientConfig);
         try {
             $forwardUrl = $proxyList[$service]["forward-url"];
             // El envío propiamente dicho
