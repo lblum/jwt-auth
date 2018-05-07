@@ -69,8 +69,18 @@ class BaseController extends Controller
         // Agrego los headers extra
         if ( array_key_exists ("headers-extra",$proxyList[$service]) !== false ) {
             foreach($proxyList[$service]["headers-extra"] as $key=>$val ) {
+                // Armo el header
+                $header = "$key:";
+                foreach($val as $piece) {
+                    if ( $piece["base64"] === true ) {
+                        $header .= base64_encode( $piece["text"] );
+                    } else {
+                        $header .= $piece["text"];
+                    }
+                }
+                die($header);
                 if ( array_key_exists($key,$req->headers->all()) === false ) {
-                    $headers[] = "$key:" . $val;
+                    $headers[] = $header;
                 }
             }
         }
