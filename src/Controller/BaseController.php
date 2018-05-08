@@ -28,17 +28,14 @@ class BaseController extends Controller
     }
 
     /**
-     * Elimina los prefijos sobrantes
+     * Elimina el prefijo de servicio
      *
-     * @param String $service
-     * @param String $uri
      * @return String
      */
-    protected function getDestURI($service,$uri)
+    protected function getDestURI()
     {        
-        $uri = preg_replace("/^\/login/","",$uri,1);
-        $uri = preg_replace("/^\/proxy/","",$uri,1);
-        $uri = preg_replace("/^\/$service/","",$uri,1);
+        $uri = $this->req->getRequestUri();
+        $uri = preg_replace("/^\/" . $this->service . "/","",$uri,1);
         return $uri;        
     }
 
@@ -54,47 +51,28 @@ class BaseController extends Controller
      */
     protected function forwardReq(String $service,Request $req)
     {
-        // Traduzco el servicio a la nueva URl
-        $proxyList = $this->getParameter("app.proxy_list");
-        if ( array_key_exists($service,$proxyList) === false )
-            throw $this->createNotFoundException("Servicio $service no encontrado (¿falta configuración?)");
+        // Los parámetros de conexión
+        $this->service = $service;
+        $this->req = $req;
+        $this->loadParams();
 
         // Saco los prefijos sobrantes
-        $route = $this->getDestURI($service,$req->getRequestUri());
+        $route = $this->getDestURI();
+        
         $pos = strpos($route,"/login");
         if ( $pos === false ) {
             // Es una conexión común
-            $forwardUrl = $proxyList[$service]["forward-url"] . $route;
+            $forwardUrl = $this->forward . $route;
         } else {
             // Es un login
-            $forwardUrl = $proxyList[$service]["login"];
+            $forwardUrl = $this->login;
             // extraigo el /login para preservar los parámetros
             $forwardUrl .= substr($route,strlen("/login"));
         }
 
-        // Preparo los headers a enviar
-        $headersAssoc = [];
-        foreach($req->headers->all() as $key=>$val)
-            $headersAssoc[strtolower($key)] = $val[0];
-        // Agrego los headers extra
-        if ( array_key_exists ("headers-extra",$proxyList[$service]) !== false ) {
-            foreach($proxyList[$service]["headers-extra"] as $key=>$val ) {
-                // Armo el header
-                $header = "";//strtolower($key) . ":";
-                foreach($val as $piece) {
-                    if ( $piece["base64"] === true ) {
-                        $header .= base64_encode( $piece["text"] );
-                    } else {
-                        $header .= $piece["text"];
-                    }
-                }
-                $headersAssoc[strtolower($key)] = $header;
-            }
-        }
-        $clientConfig = $this->getParameter("app.proxy.client.config");
-        $clientConfig["body"] = $req->getContent();
-        //$clientConfig["debug"] = fopen("c:/tmp/curl.txt", 'w');
-        $clientConfig["headers"] = $headersAssoc;
+        $clientConfig = $this->params;
+        $clientConfig["body"] = $this->req->getContent();
+        $clientConfig["headers"] = $this->headers;
     
         $client = new Client($clientConfig);
         try {
@@ -138,6 +116,91 @@ class BaseController extends Controller
             );
             return $retVal;
         }
+    }
+
+    /**
+     * El servicio (aplicación)
+     *
+     * @var String
+     */
+    protected $service;
+    /**
+     * El request recibido
+     *
+     * @var Request
+     */
+    protected $req;
+    /**
+     * URL para el autenticar
+     *
+     * @var String
+     */
+    protected $login;
+    /**
+     * URL para el resto del servicio
+     *
+     * @var String
+     */
+    protected $forward;
+    /**
+     * Headers a enviar
+     *
+     * @var Array
+     */
+    protected $headers;
+    /**
+     * Parámetros extra
+     *
+     * @var Array
+     */
+    protected $params;
+
+    /**
+     * Preparo la configuración de la conexión
+     *
+     * @return void
+     */
+    protected function loadParams() {
+        // Cargo todo la configuracion
+        $proxyList = $this->getParameter("app.proxy_list");
+        if ( array_key_exists($this->service,$proxyList) === false )
+            throw $this->createNotFoundException("Servicio $this->service no encontrado (¿falta configuración?)");
+        $conf = $this->getParameter("app.proxy_list")[$this->service];
+
+        $this->login = $conf["login-url"];
+        $this->forward = $conf["forward-url"];
+
+        // Preparo los headers a enviar
+        $this->headers = [];
+        foreach($this->req->headers->all() as $key=>$val)
+            $this->headers[strtolower($key)] = $val[0];
+
+        // Agrego los headers adicionales
+        if ( array_key_exists ("headers-extra",$conf) !== false 
+             && $conf["headers-extra"] != null ) {
+            foreach($conf["headers-extra"] as $key=>$val ) {
+                $this->headers[strtolower($key)] = $header;
+            }
+        }
+       
+        // Parámetros adicionales
+        if ( array_key_exists ("params",$conf) !== false 
+             && $conf["params"] != null ) {
+            $this->params = $conf["params"];
+        }
+
+    }
+    
+
+    /**
+     * Cargo los parámetros de la conexión desde el proxy.yaml
+     *
+     * @param String $pName
+     * @param String $pDefault
+     * @return String
+     */
+    protected function loadParam($pName,$pDefault= null) {
+        $proxyList = $this->getParameter($pName);
     }
 
 }

@@ -1,29 +1,28 @@
 parameters:
-   app.proxy.client.config:
-      'verify': false
-   app.proxy_list:
-      'api-test'  :
-         # Dirección remota
-         'forward-url' : '%env(LOCALHOST)%/test'
-      'pruebas_jwt'  :
-         # URL para el login
-         # Esta es la única URL que se acepta sin token
-         'login': 'https://192.168.1.60:10443/ords/rws/spa_pruebas_jwt/LOGIN'
+  app.proxy_list:
+    'pruebas_jwt'  :
+      # URL para el login
+      # Esta es la única URL que se acepta sin token
+      'login-url': 'https://192.168.1.60:10443/ords/rws/spa_pruebas_jwt/LOGIN'
 
-         # URL para el resto
-         # Requiere token válido
-         'forward-url' : 'https://192.168.1.60:10443/ords/rws/spa_pruebas_jwt'
+      # URL para el resto
+      # Requiere token válido
+      'forward-url' : 'https://192.168.1.60:10443/ords/rws/spa_pruebas_jwt'
 
-         # Headers adicionales (fundamentalmente para autorización básica)
-         'headers-extra' : 
-            # El usuario y password van en formato base64
-            # Usuario: pass -> base 64
-            # https://www.base64encode.org
-            'authorization'   : 
-               - 
-                  'text': 'Basic '
-                  'base64': false
-               - 
-                  'text': 'rwspu:restws'
-                  'base64': true
+      # Headers adicionales
+      'headers-extra' : ~
+
+      # Parametros de la conexion
+      'params':
+        # No chequear validez de los certificados SSL
+        'verify': false
+
+        # Header de autenticacion HTTP
+        # [usuario , password [,tipo]]
+        # digest puede ser 
+        # nulo (básica)
+        # digest
+        # ntlm
+        'auth': ['rwspu', 'restws']
+
 
