@@ -99,7 +99,7 @@ class BaseController extends Controller
         $client = new Client($clientConfig);
         try {
             // El envío propiamente dicho
-            $resp = $client->request($req->getMethod() , $forwardUrl . $route);
+            $resp = $client->request($req->getMethod() , $forwardUrl );
             
             $body = $resp->getBody();
             $statusCode = $resp->getStatusCode();
