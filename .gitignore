@@ -21,4 +21,3 @@ symfony.lock
 
 phpunit\.xml\.dist
 
-config/bundles\.php
