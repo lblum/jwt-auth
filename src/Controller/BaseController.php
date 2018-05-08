@@ -190,17 +190,4 @@ class BaseController extends Controller
         }
 
     }
-    
-
-    /**
-     * Cargo los parámetros de la conexión desde el proxy.yaml
-     *
-     * @param String $pName
-     * @param String $pDefault
-     * @return String
-     */
-    protected function loadParam($pName,$pDefault= null) {
-        $proxyList = $this->getParameter($pName);
-    }
-
 }
