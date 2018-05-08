@@ -18,3 +18,7 @@ symfony.lock
 .phpunit
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+
+phpunit\.xml\.dist
+
+config/bundles\.php
