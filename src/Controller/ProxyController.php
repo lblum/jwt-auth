@@ -14,7 +14,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderToken
 class ProxyController extends BaseController
 {
     /**
-     * @Route("/proxy/{service}/{route}", name="proxy", defaults={"route" = null}, requirements={"route"=".+"})
+     * @Route("/{service}/{route}", name="proxy", defaults={"route" = null}, requirements={"route"=".+"})
      */
     public function proxy($service,$route,Request $req)
     {
@@ -27,6 +27,7 @@ class ProxyController extends BaseController
         $resp = $this->forwardReq($service,$req);
         return $resp;
     }
+
 
     /**
      * Valido la autorización en el header

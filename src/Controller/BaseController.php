@@ -61,6 +61,16 @@ class BaseController extends Controller
 
         // Saco los prefijos sobrantes
         $route = $this->getDestURI($service,$req->getRequestUri());
+        $pos = strpos($route,"/login");
+        if ( $pos === false ) {
+            // Es una conexión común
+            $forwardUrl = $proxyList[$service]["forward-url"] . $route;
+        } else {
+            // Es un login
+            $forwardUrl = $proxyList[$service]["login"];
+            // extraigo el /login para preservar los parámetros
+            $forwardUrl .= substr($route,strlen("/login"));
+        }
 
         // Preparo los headers a enviar
         $headersAssoc = [];
@@ -88,7 +98,6 @@ class BaseController extends Controller
     
         $client = new Client($clientConfig);
         try {
-            $forwardUrl = $proxyList[$service]["forward-url"];
             // El envío propiamente dicho
             $resp = $client->request($req->getMethod() , $forwardUrl . $route);
             
