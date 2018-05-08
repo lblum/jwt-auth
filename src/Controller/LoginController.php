@@ -19,15 +19,14 @@ class LoginController extends BaseController
         {
             $jsonData = json_decode($resp->getContent(),true);
             $ttl = 3600;
-            
+            $retData = [
+                "payload" => $jsonData,
+                "exp"     => time() + $ttl
+            ];
             $token = $this->get("lexik_jwt_authentication.encoder")
-            ->encode([
-                "subject" => $jsonData["subject"],
-                "realm"   => $jsonData["realm"],
-                "exp"     => time() + $ttl 
-            ]);
-            $jsonData["token"] = $token;
-            return $this->json($jsonData);
+                     ->encode($retData);
+            $retData["token"] = $token;
+            return $this->json($retData);
         }
         return $resp;
     }

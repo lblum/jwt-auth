@@ -83,7 +83,7 @@ class BaseController extends Controller
         }
         $clientConfig = $this->getParameter("app.proxy.client.config");
         $clientConfig["body"] = $req->getContent();
-        $clientConfig["debug"] = fopen("c:/tmp/curl.txt", 'w');
+        //$clientConfig["debug"] = fopen("c:/tmp/curl.txt", 'w');
         $clientConfig["headers"] = $headersAssoc;
     
         $client = new Client($clientConfig);

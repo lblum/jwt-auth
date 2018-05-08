@@ -5,10 +5,15 @@ parameters:
       'api-test'  :
          # Dirección remota
          'forward-url' : '%env(LOCALHOST)%/test'
-      'spa_pruebas_jwt'  :
-         # Dirección remota
-         #'forward-url' : '%env(LOCALHOST)%/test'
+      'pruebas_jwt'  :
+         # URL para el login
+         # Esta es la única URL que se acepta sin token
+         'login': 'https://192.168.1.60:10443/ords/rws/spa_pruebas_jwt/LOGIN'
+
+         # URL para el resto
+         # Requiere token válido
          'forward-url' : 'https://192.168.1.60:10443/ords/rws/spa_pruebas_jwt'
+
          # Headers adicionales (fundamentalmente para autorización básica)
          'headers-extra' : 
             # El usuario y password van en formato base64
