@@ -14,10 +14,11 @@ parameters:
             # El usuario y password van en formato base64
             # Usuario: pass -> base 64
             # https://www.base64encode.org
-            'Authorization'   : 
+            'authorization'   : 
                - 
                   'text': 'Basic '
                   'base64': false
                - 
-                  'text': 'rwspu: restws'
+                  'text': 'rwspu:restws'
                   'base64': true
+

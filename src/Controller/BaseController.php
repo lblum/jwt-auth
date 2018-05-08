@@ -63,14 +63,14 @@ class BaseController extends Controller
         $route = $this->getDestURI($service,$req->getRequestUri());
 
         // Preparo los headers a enviar
-        $headers = [];
+        $headersAssoc = [];
         foreach($req->headers->all() as $key=>$val)
-            $headers[] = "$key:" . $val[0];
+            $headersAssoc[strtolower($key)] = $val[0];
         // Agrego los headers extra
         if ( array_key_exists ("headers-extra",$proxyList[$service]) !== false ) {
             foreach($proxyList[$service]["headers-extra"] as $key=>$val ) {
                 // Armo el header
-                $header = "$key:";
+                $header = "";//strtolower($key) . ":";
                 foreach($val as $piece) {
                     if ( $piece["base64"] === true ) {
                         $header .= base64_encode( $piece["text"] );
@@ -78,14 +78,13 @@ class BaseController extends Controller
                         $header .= $piece["text"];
                     }
                 }
-                if ( array_key_exists($key,$req->headers->all()) === false ) {
-                    $headers[] = $header;
-                }
+                $headersAssoc[strtolower($key)] = $header;
             }
         }
         $clientConfig = $this->getParameter("app.proxy.client.config");
         $clientConfig["body"] = $req->getContent();
-        $clientConfig["headers"] = $headers;
+        $clientConfig["debug"] = fopen("c:/tmp/curl.txt", 'w');
+        $clientConfig["headers"] = $headersAssoc;
     
         $client = new Client($clientConfig);
         try {
