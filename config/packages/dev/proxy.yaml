@@ -1,5 +1,28 @@
 parameters:
-   app.proxy_list:
-     'servicio-1': 'http://localhost/ds'
-     'servicio-2': 456
-     'api-test'  : '%env(LOCALHOST)%/test'
+  app.proxy_list:
+    'pruebas_jwt'  :
+      # URL para el login
+      # Esta es la única URL que se acepta sin token
+      'login-url': 'https://192.168.1.60:10443/ords/rws/spa_pruebas_jwt/LOGIN'
+
+      # URL para el resto
+      # Requiere token válido
+      'forward-url' : 'https://192.168.1.60:10443/ords/rws/spa_pruebas_jwt'
+
+      # Headers adicionales
+      'headers-extra' : ~
+
+      # Parametros de la conexion
+      'params':
+        # No chequear validez de los certificados SSL
+        'verify': false
+
+        # Header de autenticacion HTTP
+        # [usuario , password [,tipo]]
+        # digest puede ser 
+        # nulo (básica)
+        # digest
+        # ntlm
+        'auth': ['rwspu', 'restws']
+
+

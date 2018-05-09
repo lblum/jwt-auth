@@ -1,7 +1,10 @@
-php 7.2 en centos 7
+﻿php 7.2 en centos 7
 
 https://wiki.centos.org/HowTos/php7
 
+-- Adicionales
+yum install net-tools git httpd
+systemctl enable httpd.service
 
 -- Certificados
 mkdir config/jwt
@@ -9,6 +12,16 @@ openssl genrsa -out config/jwt/private.pem -aes256 4096
 openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
 
 En Bash para windows, agregar winpty antes de openssl
+
+
+En httpd.config
+
+DocumentRoot "/var/www/html/jwt-auth/public"
+<Directory "/var/www/html/jwt-auth/public">
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>
 
 lexik_jwt_authentication:
     private_key_path: %kernel.root_dir%/../var/jwt/private.pem
@@ -22,4 +35,156 @@ composer install
 - Producción:    
 composer install --no-dev
 
+-- ModSecurity
+Muchas de las reglas del CRS 3 requieren una versión de modsecurity superior a la que viene por default con centos 7 (>=2.8)
 
+Lo que hay que hacer es instalarlo desde los fuentes
+
+yum wget install gcc make automake autoconf libtool pcre pcre-devel libxml2 libxml2-devel curl curl-devel httpd-devel
+cd /usr/src
+wget https://www.modsecurity.org/tarball/2.9.1/modsecurity-2.9.1.tar.gz -O - 2> /dev/null | tar xvzrm xvfz modsecurity-2.9.1.tar.gz
+cd modsecurity-2.9.1
+./configure --enable-standalone-module
+make
+make install
+
+Configuración del mod_security
+
+/etc/httpd/conf.d:
+<IfModule mod_security2.c>
+    # ModSecurity Core Rules Set configuration
+        IncludeOptional modsecurity.d/*.conf
+        IncludeOptional modsecurity.d/rules/*.conf
+
+    # Default recommended configuration
+    SecRuleEngine On
+    SecRequestBodyAccess On
+    SecRule REQUEST_HEADERS:Content-Type "text/xml" \
+         "id:'200000',phase:1,t:none,t:lowercase,pass,nolog,ctl:requestBodyProcessor=XML"
+    SecRequestBodyLimit 13107200
+    SecRequestBodyNoFilesLimit 131072
+    SecRequestBodyInMemoryLimit 131072
+    SecRequestBodyLimitAction Reject
+    SecRule REQBODY_ERROR "!@eq 0" \
+    "id:'200001', phase:2,t:none,log,deny,status:400,msg:'Failed to parse request body.',logdata:'%{reqbody_error_msg}',severity:2"
+    SecRule MULTIPART_STRICT_ERROR "!@eq 0" \
+    "id:'200002',phase:2,t:none,log,deny,status:44,msg:'Multipart request body \
+    failed strict validation: \
+    PE %{REQBODY_PROCESSOR_ERROR}, \
+    BQ %{MULTIPART_BOUNDARY_QUOTED}, \
+    BW %{MULTIPART_BOUNDARY_WHITESPACE}, \
+    DB %{MULTIPART_DATA_BEFORE}, \
+    DA %{MULTIPART_DATA_AFTER}, \
+    HF %{MULTIPART_HEADER_FOLDING}, \
+    LF %{MULTIPART_LF_LINE}, \
+    SM %{MULTIPART_MISSING_SEMICOLON}, \
+    IQ %{MULTIPART_INVALID_QUOTING}, \
+    IP %{MULTIPART_INVALID_PART}, \
+    IH %{MULTIPART_INVALID_HEADER_FOLDING}, \
+    FL %{MULTIPART_FILE_LIMIT_EXCEEDED}'"
+
+    SecRule MULTIPART_UNMATCHED_BOUNDARY "!@eq 0" \
+    "id:'200003',phase:2,t:none,log,deny,status:44,msg:'Multipart parser detected a possible unmatched boundary.'"
+
+    SecPcreMatchLimit 1000
+    SecPcreMatchLimitRecursion 1000
+
+    SecRule TX:/^MSC_/ "!@streq 0" \
+            "id:'200004',phase:2,t:none,deny,msg:'ModSecurity internal error flagged: %{MATCHED_VAR_NAME}'"
+
+    SecResponseBodyAccess Off
+    SecDebugLog /var/log/httpd/modsec_debug.log
+    SecDebugLogLevel 0
+    SecAuditEngine RelevantOnly
+    SecAuditLogRelevantStatus "^(?:5|4(?!04))"
+    SecAuditLogParts ABIJDEFHZ
+    SecAuditLogType Serial
+    SecAuditLog /var/log/httpd/modsec_audit.log
+    SecAuditLog /var/log/httpd/modsec_audit.log
+    SecArgumentSeparator &
+    SecCookieFormat 0
+    SecTmpDir /var/lib/mod_security
+    SecDataDir /var/lib/mod_security
+</IfModule>
+
+/etc/httpd/conf.modules.d/10-mod_security.conf:
+LoadModule security2_module modules/mod_security2.so
+
+<IfModule !mod_unique_id.c>
+    LoadModule unique_id_module modules/mod_unique_id.so
+</IfModule>
+
+
+
+
+httpd -M | grep --color secu
+
+-- rule-set (OWASP Core Rule Set)
+cd /etc/httpd/modsecurity.d/
+rm -rf  activated_rules
+git clone https://github.com/SpiderLabs/owasp-modsecurity-crs .
+mv crs-setup.conf.example crs-setup.conf
+
+
+---- Configuración del CRS
+Por el momento, lo dejamos en  Anomaly Scoring mode (el default)
+
+Empezamos con el default de paranoia-level (1), pero probablemente lo subamos a 2 en el corto plazo
+
+Descomentar las líneas que dicen 
+#SecAction \
+#  "id:900000,\
+#   phase:1,\
+#   nolog,\
+#   pass,\
+#   t:none,\
+#   setvar:tx.paranoia_level=1"
+
+Habilitar los distintos métodos para que se pueda usar el REST
+
+SecAction \
+ "id:900200,\
+  phase:1,\
+  nolog,\
+  pass,\
+  t:none,\
+  setvar:'tx.allowed_methods=GET HEAD POST PUT PATCH DELETE OPTIONS'"
+
+OJO!! Ver si PUT y DELETE son necesarios (lo mas probable es que si  
+
+Durante el desarrollo, no vamos a limitar el content-type, pero en producción solo vamos a permitir json y texto plano (esto último no estoy seguro)
+Descomentar (en prod)
+#SecAction \
+# "id:900220,\
+#  phase:1,\
+#  nolog,\
+#  pass,\
+#  t:none,\
+#  setvar:'tx.allowed_request_content_type=application/x-www-form-urlencoded|multipart/form-data|text/xml|application/xml|application/soap+xml|application/x-amf|application/json|application/octet-stream|text/plain'"
+
+y Dejar solo json
+SecAction \
+ "id:900220,\
+  phase:1,\
+  nolog,\
+  pass,\
+  t:none,\
+  setvar:'tx.allowed_request_content_type=application/json|text/plain'"
+
+---- Forbidden file extensions
+A estudiar. en principio, no
+
+ -- [[ HTTP Argument/Upload Limits ]]
+ -- [[ Anti-Automation / DoS Protection ]]
+ Estos son importantes para frenar los DOS!
+ 
+ -- [[ Check UTF-8 encoding ]]
+ Descomentar las líneas que dicen 
+#SecAction \
+# "id:900950,\
+#  phase:1,\
+#  nolog,\
+#  pass,\
+#  t:none,\
+#  setvar:tx.crs_validate_utf8_encoding=1"
+ 
