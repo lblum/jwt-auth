@@ -60,10 +60,12 @@
         <div class="card-body">
             <div class="form-group row">
                 <label for="dataURL" class="col-sm-1 col-form-label">URL data</label>
-
-                <div class="col-sm-11">
-                    <input type="text" class="form-control" id="dataURL" readonly disabled/>
-                </div>
+                <div class="input-group col-sm-11">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="dataPrefix"></span>
+                    </div>
+                    <input type="text" class="form-control " id="dataURL"/>
+                </div>                
             </div>
 
             <div class="form-group row">
@@ -75,11 +77,14 @@
 
             <div class="form-group row">
                 <label for="headerXauth" class="col-sm-1 col-form-label">Header</label>
-                <div class="col-sm-11">
-                    <input type="text" class="form-control" id="headerXauth"/>
-                </div>
+                <div class="input-group col-sm-11">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">X-Authorization: Bearer </span>
+                    </div>
+                    <input type="text" class="form-control " id="headerXauth"/>
+                </div>                
             </div>
-            
+
             <div class="row">
                 <div class="col-sm-3">
                     <div class="form-group">
@@ -123,6 +128,7 @@ $(document).ready(function(){
     var loginOut = $('#loginOut');
     var loginBtn = $('#loginBtn');
 
+    var dataPrefix = $('#dataPrefix');
     var dataURL = $('#dataURL');
     var dataURLFinal = $('#dataURLFinal');
     var dataIn  = $('#dataIn');
@@ -132,10 +138,11 @@ $(document).ready(function(){
 
     var token = "";
     var srvName = "";
+    var srv;
 
     function changeServicio() {
         srvName = $(cmbServ).find(":selected").val();
-        var srv = proxyList[srvName];
+        srv = proxyList[srvName];
         loginURLFinal.val(srv["login-url"]);
         loginURL.val(host + "/" + srvName + "/login");
         var dataOut =
@@ -144,6 +151,10 @@ $(document).ready(function(){
             "p_enc_pwd": ""
         };
         loginOut.val(JSON.stringify(dataOut, undefined, 2));
+
+        dataPrefix.text(host + "/" + srvName + "/");
+        dataURL.val("MONEDA");
+        dataURLFinal.val(srv["forward-url"] + "/" + dataURL.val());
     }
 
     $('#cmbServ').change(changeServicio);
@@ -163,7 +174,9 @@ $(document).ready(function(){
         })
         .fail( function (jqXHR, textStatus, errorThrown){
             if ( jqXHR.responseJSON != undefined ) {
-                loginIn.val(JSON.stringify(jqXHR.responseJSON, undefined, 2));               
+                var texto = "HTTP Response code -> " + jqXHR.status + "\n";
+                texto += JSON.stringify(jqXHR.responseJSON, undefined, 2);
+                loginIn.val(texto);
             } else 
                 loginIn.val(textStatus + " " + errorThrown);
         })
@@ -171,6 +184,7 @@ $(document).ready(function(){
             $this.html("Enviar");
         });
     });
+
     dataBtn.click(function(){
         dataIn.val("");
         $this = $(this);
@@ -184,19 +198,24 @@ $(document).ready(function(){
             }
         })
         .done(function( data ) {
-            debugger;
             dataIn.val(JSON.stringify(data, undefined, 2));
         })
         .fail( function (jqXHR, textStatus, errorThrown){
-            debugger;
             if ( jqXHR.responseJSON != undefined ) {
-                dataIn.val(JSON.stringify(jqXHR.responseJSON, undefined, 2));               
+                var texto = "HTTP Response code -> " + jqXHR.status + "\n";
+                texto += JSON.stringify(jqXHR.responseJSON, undefined, 2);
+                dataIn.val(texto);
+                            
             } else 
                 dataIn.val(textStatus + " " + errorThrown);
         })
         .always(function(){
             $this.html("Enviar");
         });
+    });
+
+    dataURL.on("input",function(){
+        dataURLFinal.val(srv["forward-url"] + "/" + dataURL.val());
     });
     
     changeServicio();
