@@ -1,20 +1,205 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello {{ controller_name }}!{% endblock %}
-
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'src/Controller/Test2Controller.php'|file_link(0) }}">src/Controller/Test2Controller.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'templates/test2/index.html.twig'|file_link(0) }}">templates/test2/index.html.twig</a></code></li>
-    </ul>
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+        <select class="form-control" id="cmbServ">
+            {% for key,val in proxyList %}
+            <option value="{{ key }}" >{{ key }}</option>
+            {% endfor %}
+        </select>
 </div>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="login-tab" data-toggle="tab" href="#login" role="tab" aria-controls="home" aria-selected="true">Generaci&oacute;n de token</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="consumo-tab" data-toggle="tab" href="#consumo" role="tab" aria-controls="profile" aria-selected="false">Consumo de token</a>
+  </li>
+</ul>
+<div class="tab-content" id="mainTabContent">
+  <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+    <div class="card mb-6 box-shadow">
+        <div class="card-body">
+            <div class="input-group input-group-lg form-group row">
+                <label for="loginURL" class="col-sm-1 col-form-label">URL login</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="loginURL" readonly disabled/>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="loginURLFinal" class="col-sm-1 col-form-label">URL final</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="loginURLFinal" readonly disabled/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="comment">Envio:</label>
+                        <textarea class="form-control" rows="8" id="loginOut"></textarea>
+                    </div>
+                </div>
+                <div class="col-sm-9">
+                    <div class="form-group">
+                        <label for="comment">Respuesta:</label>
+                        <textarea class="form-control" rows="8" id="loginIn" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+            <button type="button" 
+                    id="loginBtn" 
+                    class="btn btn-lg btn-block btn-outline-primary"
+                >Enviar</button>
+        </div>
+    </div>
+  </div>
+  <div class="tab-pane fade" id="consumo" role="tabpanel" aria-labelledby="consumo-tab">
+    <div class="card mb-6 box-shadow">
+        <div class="card-body">
+            <div class="form-group row">
+                <label for="dataURL" class="col-sm-1 col-form-label">URL data</label>
+
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="dataURL" readonly disabled/>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="dataURLFinal" class="col-sm-1 col-form-label">URL final</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="dataURLFinal" readonly disabled/>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="headerXauth" class="col-sm-1 col-form-label">Header</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="headerXauth"/>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="comment">Envio:</label>
+                        <textarea class="form-control" rows="8" id="dataOut"></textarea>
+                    </div>
+                </div>
+                <div class="col-sm-9">
+                    <div class="form-group">
+                        <label for="comment">Respuesta:</label>
+                        <textarea class="form-control" rows="8" id="dataIn" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+            <button type="button" 
+                    id="dataBtn" 
+                    class="btn btn-lg btn-block btn-outline-primary"
+                >Enviar</button>
+        </div>
+    </div>
+  
+  </div>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+var proxyList = new Array()
+{% for key,val in proxyList %}
+proxyList["{{ key }}"] = {{ val|json_encode()|raw }};
+{% endfor %}
+
+$(document).ready(function(){
+    var protocol = location.protocol;
+    var slashes = protocol.concat("//");
+    var host = slashes.concat(window.location.hostname);
+
+    var cmbServ  = $('#cmbServ');
+    var loginURL = $('#loginURL');
+    var loginURLFinal = $('#loginURLFinal');
+    var loginIn  = $('#loginIn');
+    var loginOut = $('#loginOut');
+    var loginBtn = $('#loginBtn');
+
+    var dataURL = $('#dataURL');
+    var dataURLFinal = $('#dataURLFinal');
+    var dataIn  = $('#dataIn');
+    var dataOut = $('#dataOut');
+    var dataBtn = $('#dataBtn');
+    var headerXauth = $('#headerXauth');
+
+    var token = "";
+    var srvName = "";
+
+    function changeServicio() {
+        srvName = $(cmbServ).find(":selected").val();
+        var srv = proxyList[srvName];
+        loginURLFinal.val(srv["login-url"]);
+        loginURL.val(host + "/" + srvName + "/login");
+        var dataOut =
+        {
+            "p_usuario": "",
+            "p_enc_pwd": ""
+        };
+        loginOut.val(JSON.stringify(dataOut, undefined, 2));
+    }
+
+    $('#cmbServ').change(changeServicio);
+    loginBtn.click(function(){
+        loginIn.val("");
+        $this = $(this);
+        $this.html("<i class='fa fa-spinner fa-spin '></i> Enviando");
+        $.ajax({
+            url: loginURL.val(),
+            data: loginOut.val(),
+            method: "POST"
+        })
+        .done(function( data ) {
+            loginIn.val(JSON.stringify(data, undefined, 2));
+            headerXauth.val(data.token);
+            dataOut.val(JSON.stringify(data.payload, undefined, 2));
+        })
+        .fail( function (jqXHR, textStatus, errorThrown){
+            if ( jqXHR.responseJSON != undefined ) {
+                loginIn.val(JSON.stringify(jqXHR.responseJSON, undefined, 2));               
+            } else 
+                loginIn.val(textStatus + " " + errorThrown);
+        })
+        .always(function(){
+            $this.html("Enviar");
+        });
+    });
+    dataBtn.click(function(){
+        dataIn.val("");
+        $this = $(this);
+        $this.html("<i class='fa fa-spinner fa-spin '></i> Enviando");
+        $.ajax({
+            url: "http://jwt-auth/" + srvName + "/MONEDA",//,dataURL.val(),
+            data: dataOut.val(),
+            method: "POST",
+            beforeSend: function(request) {
+                request.setRequestHeader("X-Authorization", "Bearer " + headerXauth.val() );
+            }
+        })
+        .done(function( data ) {
+            debugger;
+            dataIn.val(JSON.stringify(data, undefined, 2));
+        })
+        .fail( function (jqXHR, textStatus, errorThrown){
+            debugger;
+            if ( jqXHR.responseJSON != undefined ) {
+                dataIn.val(JSON.stringify(jqXHR.responseJSON, undefined, 2));               
+            } else 
+                dataIn.val(textStatus + " " + errorThrown);
+        })
+        .always(function(){
+            $this.html("Enviar");
+        });
+    });
+    
+    changeServicio();
+});
+</script>
 {% endblock %}

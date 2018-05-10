@@ -73,7 +73,7 @@ class BaseController extends Controller
             
             $body = $resp->getBody();
             $statusCode = $resp->getStatusCode();
-            $headers = $resp->getHeaders();
+            $headers = $this->correctHeaders($resp->getHeaders());
     
             // Si es que hay respuesta OK
             $retVal = $this->json(
@@ -94,7 +94,7 @@ class BaseController extends Controller
                     "reason" => $resp->getReasonPhrase()
                 ],
                 $resp->getStatusCode(),
-                $resp->getHeaders()
+                $this->correctHeaders($resp->getHeaders())
             );
 
             return $retVal;
@@ -108,6 +108,26 @@ class BaseController extends Controller
             );
             return $retVal;
         }
+    }
+
+
+    /**
+     * Elimino los headers problemáticos
+     *
+     * @param Array $headersIn
+     * @return Array
+     */
+    private function correctHeaders($headersIn)
+    {
+        $headersToDelete = [
+            "Transfer-Encoding",
+        ];
+        $headersOut = [];
+        foreach($headersIn as $key=>$val) {
+            if ( array_search($key,$headersToDelete) === false) 
+            $headersOut[$key] = $val;
+        }
+        return $headersOut;
     }
 
     /**

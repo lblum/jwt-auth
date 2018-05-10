@@ -16,8 +16,10 @@ class TestController extends Controller
         // Solo en ambiente de desarrollo
         if ( !$this->get('kernel')->isDebug() )
             throw $this->createNotFoundException('no default route exists');
+
+        $proxyList = $this->getParameter("app.proxy_list");            
         return $this->render('test/index.html.twig', [
-            'controller_name' => 'TestController',
+            'proxyList' => $proxyList,
         ]);          
     }
 }
