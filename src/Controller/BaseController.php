@@ -20,14 +20,6 @@ class BaseController extends Controller
     }
     
     /**
-     * @Route("/", name="root")
-     */
-    public function noHome()
-    {
-        throw $this->createNotFoundException('no default route exists');
-    }
-
-    /**
      * Elimina el prefijo de servicio
      *
      * @return String
