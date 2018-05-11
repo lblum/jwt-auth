@@ -159,13 +159,22 @@ $(document).ready(function(){
 
     $('#cmbServ').change(changeServicio);
     loginBtn.click(function(){
+        var data;
+        debugger;
+        try {
+            data = JSON.parse(loginOut.val());
+        } catch(ex) {
+            alert("Error en el JSON");
+            return;
+        }
         loginIn.val("");
         $this = $(this);
         $this.html("<i class='fa fa-spinner fa-spin '></i> Enviando");
         $.ajax({
             url: loginURL.val(),
-            data: JSON.stringify(loginOut.val()),
-            method: "POST"
+            data: JSON.stringify(data),
+            method: "POST",
+            contentType:"application/json"
         })
         .done(function( data ) {
             loginIn.val(JSON.stringify(data, undefined, 2));
@@ -190,7 +199,7 @@ $(document).ready(function(){
         $this = $(this);
         $this.html("<i class='fa fa-spinner fa-spin '></i> Enviando");
         $.ajax({
-            url: "http://jwt-auth/" + srvName + "/MONEDA",//,dataURL.val(),
+            url: dataPrefix.text() + dataURL.val(),
             data: JSON.stringify(dataOut.val()),
             method: "POST",
             beforeSend: function(request) {
