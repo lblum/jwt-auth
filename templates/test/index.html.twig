@@ -160,7 +160,6 @@ $(document).ready(function(){
     $('#cmbServ').change(changeServicio);
     loginBtn.click(function(){
         var data;
-        debugger;
         try {
             data = JSON.parse(loginOut.val());
         } catch(ex) {
@@ -195,14 +194,24 @@ $(document).ready(function(){
     });
 
     dataBtn.click(function(){
+        var data;
+        try {
+            data = JSON.parse(dataOut.val());
+        } catch(ex) {
+            alert("Error en el JSON");
+            return;
+        }
+
         dataIn.val("");
         $this = $(this);
         $this.html("<i class='fa fa-spinner fa-spin '></i> Enviando");
         $.ajax({
             url: dataPrefix.text() + dataURL.val(),
-            data: JSON.stringify(dataOut.val()),
+            data: JSON.stringify(data),
             method: "POST",
+            contentType:"application/json",
             beforeSend: function(request) {
+                request.setRequestHeader("Accept", "application/json" );
                 request.setRequestHeader("X-Authorization", "Bearer " + headerXauth.val() );
             }
         })

@@ -63,7 +63,8 @@ class BaseController extends Controller
         }
 
         $clientConfig = $this->params;
-        $clientConfig["body"] = $this->req->getContent();
+        $body = $this->req->getContent();
+        $clientConfig["body"] = $body;
         $clientConfig["headers"] = $this->headers;
     
         $client = new Client($clientConfig);
