@@ -181,12 +181,9 @@ $(document).ready(function(){
             dataOut.val(JSON.stringify(data.payload, undefined, 2));
         })
         .fail( function (jqXHR, textStatus, errorThrown){
-            if ( jqXHR.responseJSON != undefined ) {
-                var texto = "HTTP Response code -> " + jqXHR.status + "\n";
-                texto += JSON.stringify(jqXHR.responseJSON, undefined, 2);
-                loginIn.val(texto);
-            } else 
-                loginIn.val(textStatus + " " + errorThrown);
+            var texto = "HTTP Response code -> " + jqXHR.status + "\n";
+            texto += JSON.stringify(jqXHR.responseJSON, undefined, 2);
+            loginIn.val(texto);
         })
         .always(function(){
             $this.html("Enviar");
@@ -219,13 +216,11 @@ $(document).ready(function(){
             dataIn.val(JSON.stringify(data, undefined, 2));
         })
         .fail( function (jqXHR, textStatus, errorThrown){
-            if ( jqXHR.responseJSON != undefined ) {
-                var texto = "HTTP Response code -> " + jqXHR.status + "\n";
-                texto += JSON.stringify(jqXHR.responseJSON, undefined, 2);
-                dataIn.val(texto);
-                            
-            } else 
-                dataIn.val(status + "\n" + JSON.stringify(jqXHR.responseText, undefined, 2));
+            
+            var texto = "HTTP Response code -> " + jqXHR.status + "\n";
+            texto += JSON.stringify(jqXHR.responseJSON, undefined, 2);
+            dataIn.val(texto);
+
         })
         .always(function(){
             $this.html("Enviar");

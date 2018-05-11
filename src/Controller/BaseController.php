@@ -90,13 +90,15 @@ class BaseController extends Controller
             
             // Excepción HTTP
             $resp = $ex->getResponse();
+            $headersResp = $this->correctHeaders($resp->getHeaders());
+            $headersResp["Content-type"] = "application/json";
 
             $retVal = $this->json([
                     "status" => $resp->getStatusCode(),
                     "reason" => $resp->getReasonPhrase()
                 ],
                 $resp->getStatusCode(),
-                $this->correctHeaders($resp->getHeaders())
+                $headersResp
             );
 
             return $retVal;
@@ -123,6 +125,7 @@ class BaseController extends Controller
     {
         $headersToDelete = [
             "Transfer-Encoding",
+            "Content-Length"
         ];
         $headersOut = [];
         foreach($headersIn as $key=>$val) {
