@@ -3,11 +3,11 @@ parameters:
     'pruebas_jwt'  :
       # URL para el login
       # Esta es la única URL que se acepta sin token
-      'login-url': 'https://192.168.1.60:10443/ords/rws/spa_pruebas_jwt/LOGIN'
+      'login-url': 'https://testing.laholando.com:10443/ords/rws/spa_pruebas_jwt/LOGIN'
 
       # URL para el resto
       # Requiere token válido
-      'forward-url' : 'https://192.168.1.60:10443/ords/rws/spa_pruebas_jwt'
+      'forward-url' : 'https://testing.laholando.com:10443/ords/rws/spa_pruebas_jwt'
 
       # Headers adicionales
       'headers-extra' : ~
