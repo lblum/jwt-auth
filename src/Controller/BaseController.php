@@ -87,6 +87,7 @@ class BaseController extends Controller
     
             return $retVal;
         } catch(ClientException $ex) {
+            
             // Excepción HTTP
             $resp = $ex->getResponse();
 

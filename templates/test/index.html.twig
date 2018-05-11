@@ -225,7 +225,7 @@ $(document).ready(function(){
                 dataIn.val(texto);
                             
             } else 
-                dataIn.val(textStatus + " " + errorThrown);
+                dataIn.val(status + "\n" + JSON.stringify(jqXHR.responseText, undefined, 2));
         })
         .always(function(){
             $this.html("Enviar");
