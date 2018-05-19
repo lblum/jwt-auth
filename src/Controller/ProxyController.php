@@ -19,7 +19,7 @@ class ProxyController extends BaseController
     public function proxy($service,$route,Request $req)
     {
         // Chequeo por autorización
-        if ( !$this->checkCredentials($req) )
+        if ( !$this->checkCredentials($req,$service) )
             return new JsonResponse([
                 "error" => "auth required"
             ], Response::HTTP_UNAUTHORIZED);
@@ -33,9 +33,10 @@ class ProxyController extends BaseController
      * Valido la autorización en el header
      *
      * @param Request $request
+     * @param String $service
      * @return boolean
      */
-    public function checkCredentials(Request $request)
+    public function checkCredentials(Request $request,$service)
     {
         // Extraigo el token del header
         $extractor = new AuthorizationHeaderTokenExtractor(
@@ -51,6 +52,8 @@ class ProxyController extends BaseController
         // Chequeo la validez del token
         try {
             $data = $this->jwtEncoder->decode($token);
+            if ( $data["aud"] !== $service )
+                return false;
         } catch (JWTDecodeFailureException $e) {
             return false;
         }

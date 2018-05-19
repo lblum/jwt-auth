@@ -21,7 +21,8 @@ class LoginController extends BaseController
             $ttl = 3600;
             $retData = [
                 "payload" => $jsonData,
-                "exp"     => time() + $ttl
+                "exp"     => time() + $ttl,
+                "aud"     => $service
             ];
             $token = $this->get("lexik_jwt_authentication.encoder")
                      ->encode($retData);
