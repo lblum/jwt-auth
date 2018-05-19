@@ -125,7 +125,7 @@ class BaseController extends Controller
     {
         $headersOut = [];
         foreach($headersIn as $key=>$val) {
-            if ( array_search(strtolower($key),$headersToDelete) === false) 
+            if ( array_search(strtolower($key),$this->headersToDelete) === false) 
                 $headersOut[$key] = $val;
         }
         return $headersOut;
@@ -193,7 +193,7 @@ class BaseController extends Controller
         $conf = $proxyConf[$this->service];
 
         // Los headers a eliminar
-        $this->headersToDelete = array_map("strtolower",$proxyConf["headers-delete"]);
+        $this->headersToDelete = array_map("strtolower",$this->getParameter("app.proxy")["headers-delete"]);
 
         $this->login = $conf["login-url"];
         $this->forward = $conf["forward-url"];

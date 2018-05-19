@@ -145,15 +145,13 @@ $(document).ready(function(){
         srv = proxyList[srvName];
         loginURLFinal.val(srv["login-url"]);
         loginURL.val(host + "/" + srvName + "/login");
-        var dataOut =
-        {
-            "p_usuario": "",
-            "p_enc_pwd": ""
-        };
-        loginOut.val(JSON.stringify(dataOut, undefined, 2));
+        var loginDataOut = JSON.parse(srv["test-data"]["json-login"]);
+        loginOut.val(JSON.stringify(loginDataOut, undefined, 2));
+        var txtDataOut = JSON.parse(srv["test-data"]["json-out"]);
+        dataOut.val(JSON.stringify(txtDataOut, undefined, 2));
 
         dataPrefix.text(host + "/" + srvName + "/");
-        dataURL.val("MONEDA");
+        dataURL.val(srv["test-data"]["proc"]);
         dataURLFinal.val(srv["forward-url"] + "/" + dataURL.val());
     }
 
@@ -178,7 +176,7 @@ $(document).ready(function(){
         .done(function( data ) {
             loginIn.val(JSON.stringify(data, undefined, 2));
             headerXauth.val(data.token);
-            dataOut.val(JSON.stringify(data.payload, undefined, 2));
+            //dataOut.val(JSON.stringify(data.payload, undefined, 2));
         })
         .fail( function (jqXHR, textStatus, errorThrown){
             var texto = "HTTP Response code -> " + jqXHR.status + "\n";
