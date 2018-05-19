@@ -17,7 +17,7 @@ class TestController extends Controller
         if ( !$this->get('kernel')->isDebug() )
             throw $this->createNotFoundException('no default route exists');
 
-        $proxyList = $this->getParameter("app.proxy_list");            
+        $proxyList = $this->getParameter("app.proxy")["service-list"];
         return $this->render('test/index.html.twig', [
             'proxyList' => $proxyList,
         ]);          

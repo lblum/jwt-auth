@@ -123,14 +123,10 @@ class BaseController extends Controller
      */
     private function correctHeaders($headersIn)
     {
-        $headersToDelete = [
-            "Transfer-Encoding",
-            "Content-Length"
-        ];
         $headersOut = [];
         foreach($headersIn as $key=>$val) {
-            if ( array_search($key,$headersToDelete) === false) 
-            $headersOut[$key] = $val;
+            if ( array_search(strtolower($key),$headersToDelete) === false) 
+                $headersOut[$key] = $val;
         }
         return $headersOut;
     }
@@ -141,30 +137,42 @@ class BaseController extends Controller
      * @var String
      */
     protected $service;
+
     /**
      * El request recibido
      *
      * @var Request
      */
     protected $req;
+
     /**
      * URL para el autenticar
      *
      * @var String
      */
     protected $login;
+
     /**
      * URL para el resto del servicio
      *
      * @var String
      */
     protected $forward;
+
     /**
      * Headers a enviar
      *
      * @var Array
      */
     protected $headers;
+
+    /**
+     * Headers a eliminar
+     *
+     * @var Array
+     */
+    protected $headersToDelete;
+
     /**
      * Parámetros extra
      *
@@ -179,10 +187,13 @@ class BaseController extends Controller
      */
     protected function loadParams() {
         // Cargo todo la configuracion
-        $proxyList = $this->getParameter("app.proxy_list");
-        if ( array_key_exists($this->service,$proxyList) === false )
+        $proxyConf = $this->getParameter("app.proxy")["service-list"];
+        if ( array_key_exists($this->service,$proxyConf) === false )
             throw $this->createNotFoundException("Servicio $this->service no encontrado (¿falta configuración?)");
-        $conf = $this->getParameter("app.proxy_list")[$this->service];
+        $conf = $proxyConf[$this->service];
+
+        // Los headers a eliminar
+        $this->headersToDelete = array_map("strtolower",$proxyConf["headers-delete"]);
 
         $this->login = $conf["login-url"];
         $this->forward = $conf["forward-url"];
