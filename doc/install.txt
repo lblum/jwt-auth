@@ -41,8 +41,11 @@ Muchas de las reglas del CRS 3 requieren una versión de modsecurity superior a 
 Lo que hay que hacer es instalarlo desde los fuentes
 
 yum wget install gcc make automake autoconf libtool pcre pcre-devel libxml2 libxml2-devel curl curl-devel httpd-devel
+yum install gcc-c++ flex bison yajl yajl-devel curl-devel curl GeoIP-devel doxygen zlib-devel
 cd /usr/src
-wget https://www.modsecurity.org/tarball/2.9.1/modsecurity-2.9.1.tar.gz -O - 2> /dev/null | tar xvzrm xvfz modsecurity-2.9.1.tar.gz
+wget https://www.modsecurity.org/tarball/2.9.1/modsecurity-2.9.1.tar.gz
+tar xvzrm xvfz modsecurity-2.9.1.tar.gz
+rm modsecurity-2.9.1.tar.gz
 cd modsecurity-2.9.1
 ./configure --enable-standalone-module
 make
