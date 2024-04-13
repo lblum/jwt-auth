@@ -5,17 +5,17 @@ parameters:
       - 'Content-Length'
       - 'Host'
     service-list:
-      'pruebas_jwt'  :
+      'pruebas_jwt':
         # URL para el login
         # Esta es la única URL que se acepta sin token
-        'login-url': 'https://testing.laholando.com:10443/ords/rws/spa_pruebas_jwt/LOGIN'
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_pruebas_jwt/LOGIN'
 
         # URL para el resto
         # Requiere token válido
-        'forward-url' : 'https://testing.laholando.com:10443/ords/rws/spa_pruebas_jwt'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_pruebas_jwt'
 
         # Headers adicionales
-        'headers-extra' : ~
+        'headers-extra': ~
 
         # Parametros de la conexion
         'params':
@@ -36,10 +36,10 @@ parameters:
           'json-login': '{"p_usuario": ""
                          ,"p_enc_pwd": ""}'
           'json-out': '{"id_sesion":"12345678"}'
-      'cotiz-autos'  :
-        'login-url': 'https://testing.laholando.com:10443/ords/rws/spa_pruebas_jwt/LOGIN'
-        'forward-url' : 'https://testing.laholando.com:10443/ords/rws/spa_rws_cotiz_autos'
-        'headers-extra' : ~
+      'cotiz_autos':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_cotiz_autos'
+        'headers-extra': ~
         'params':
           'verify': false
           'auth': ['rwspu', 'restws']
@@ -59,5 +59,466 @@ parameters:
                        ,"p_grabar_cotizacion":"S"  
                        ,"p_pct_buen_resultado":"0" 
                        ,"p_pct_cliente_integral":"0"}'
+      'poliza':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_poliza'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+        'test-data':
+          'proc': 'SPR_LISTAR'
+          'json-login': '{"p_usuario": ""
+                         ,"p_enc_pwd": ""}'
+          'json-out': '{"p_cod_prod":""
+                       ,"p_fec_desde":""
+                       ,"p_fec_hasta":""
+                       ,"p_o_sesion":""
+                       ,"p_polizas":""
+                       ,"p_cod_error":""
+                       ,"p_x_error":""}'
+      'novedades_emision':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_novedades_emision'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+        'test-data':
+          'proc': 'PROCESAR'
+          'json-login': '{"p_usuario": ""
+                         ,"p_enc_pwd": ""}'
+          'json-out': '{"p_o_sesion":""
+                       ,"p_cod_prod":""
+                       ,"p_t_productor":""
+                       ,"p_fec_desde":""
+                       ,"p_fec_hasta":""
+                       ,"p_cod_sec_desde":""
+                       ,"p_cod_sec_hasta":""
+                       ,"p_t_ws":""
+                       ,"p_cod_error":""
+                       ,"p_x_error":""
+                       ,"p_nov_emision_tbl":""}'
+      'novedades_cobranzas':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_novedades_cobranzas'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+        'test-data':
+          'proc': 'PROCESAR'
+          'json-login': '{"p_usuario": ""
+                         ,"p_enc_pwd": ""}'
+          'json-out': '{"p_o_sesion":""
+                       ,"p_cod_prod":""
+                       ,"p_t_productor":""
+                       ,"p_fec_desde":""
+                       ,"p_fec_hasta":""
+                       ,"p_cod_sec_desde":""
+                       ,"p_cod_sec_hasta":""
+                       ,"p_t_ws":""
+                       ,"p_cod_error":""
+                       ,"p_x_error":""
+                       ,"p_nov_cobranzas_tbl":""}'
+      'general':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_general'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'paginado':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/paginado/'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'propuesta_autos':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_propuesta_autos/'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'listados':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/rws_listados'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'listas':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/rws_listas'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'claims':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_documentos_cs'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'holandonet':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_holandonet'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'documentos':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_documentos'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'cot_aero':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_cot_aero'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'cotiz_ap':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_cotiz_ap'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'tecnored':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_tecnored'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'denuncia_tercero':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/denuncia_tercero'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'denuncia_asegurado':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/denuncia_asegurado'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'productos_abiertos':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/rws_productos_abiertos'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'tracking_sos':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/rws_tracking_sos'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'llt':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/llt'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'listas_endosos':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_listas_endosos'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'acciones_endosos':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_acciones_endosos'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'propuesta_ap':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_propuesta_ap'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'cat_doc_digital':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_cat_gen_doc_digital'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'debitos_rechazos':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/debitos_rechazos'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'listas_suscripcion':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_listas_gen_suscripcion'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'validaciones':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/validaciones'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'cot_vida':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/rws_cot_vida'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'listasadic':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_listasadic'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'forma_pago_polizas':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/forma_pago_polizas'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'alertas_lavado':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/alertas_lavado'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'liquidacion':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/liquidacion'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'imputacion_liq':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_imputacion_liq'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'gestion_liq':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_gestion_liq'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'mesa_entrada_legales':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/mesa_entrada_legales'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'cotiz_ap_consorcio':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/cotiz_ap_consorcio'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'cotiz_ap_optimum':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/cotiz_ap_optimum'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'propuesta_ap_optimum':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/propuesta_ap_optimum'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'propuesta_ap_consorcio':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/propuesta_ap_consorcio'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'rws_list_granizo':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/rws_list_granizo'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'rws_tasaciones_granizo':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/rws_tasaciones_granizo'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'list_nov_stros':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/rws_list_nov_stros'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'novedades_siniestro':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/rws_novedades_siniestro'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'orden_bg':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/orden_bg'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'consulta_saldo':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_list_saldo'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'fact_en_tramite':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/fact_en_tramite'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'soli_aumento_suma':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_soli_aumento_suma'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'doq':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_doq'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'asegurados':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/asegurados'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'cta_cte':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/cta_cte'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'usuarios_hnet':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_usuarios_hnet'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'busqueda':
+        'login-url': 'http://vm-dbdprod:5110/ords/scr/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod:5110/ords/scr/busqueda'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwsscr', 'rwsscr']
+      'catalogacion':
+        'login-url': 'http://vm-dbdprod:5110/ords/scr/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod:5110/ords/scr/catalogacion'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwsscr', 'rwsscr']
+      'scanner':
+        'login-url': 'http://vm-dbdprod:5110/ords/scr/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod:5110/ords/scr/doq_scanner'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwsscr', 'rwsscr']
 
+      'art_mlconnect':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/scr/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/art_mlconnect'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'app_art':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/app_art'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'app_art_exp_digital':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_art_exp_digital'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'app_art_credencial':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_art_credencial'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'preguntas_frecuentes':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_preguntas_frecuentes'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'app_art_consulta_siniestro':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_art_consulta_siniestro'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+      'parametro':
+        'login-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/sesion/LOGIN'
+        'forward-url': 'http://vm-dbdprod.laholando.com:7110/ords/rws/spa_rws_parametro'
+        'headers-extra': ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
 

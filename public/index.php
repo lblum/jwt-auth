@@ -37,3 +37,17 @@ $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();
 $kernel->terminate($request, $response);
+
+$linea  = strtok($request,"\n");
+$offset = strpos($linea,"/");
+$linea  = substr($linea,$offset);
+$length = strrpos($linea," ")-1;
+$servicio = str_replace("/","_",substr($linea,1,$length));
+$logfilename = $servicio.date('_Y-m-d_H-i-s_').uniqid();
+$logdir ='logs/'.date('Y').'/'.date('m').'/'.date('d').'/';
+if (!is_dir($logdir)) {
+  mkdir($logdir,0777,true);
+}
+file_put_contents($logdir.$logfilename.'.req', $request, FILE_APPEND | LOCK_EX);
+file_put_contents($logdir.$logfilename.'.res', $response, FILE_APPEND | LOCK_EX);
+

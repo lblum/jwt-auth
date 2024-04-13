@@ -1,0 +1,63 @@
+parameters:
+  app.proxy:
+    headers-delete:
+      - 'Transfer-Encoding'
+      - 'Content-Length'
+      - 'Host'
+    service-list:
+      'pruebas_jwt'  :
+        # URL para el login
+        # Esta es la única URL que se acepta sin token
+        'login-url': 'https://testing.laholando.com:10443/ords/rws/spa_pruebas_jwt/LOGIN'
+
+        # URL para el resto
+        # Requiere token válido
+        'forward-url' : 'https://testing.laholando.com:10443/ords/rws/spa_pruebas_jwt'
+
+        # Headers adicionales
+        'headers-extra' : ~
+
+        # Parametros de la conexion
+        'params':
+          # No chequear validez de los certificados SSL
+          'verify': false
+
+          # Header de autenticacion HTTP
+          # [usuario , password [,tipo]]
+          # digest puede ser 
+          # nulo (básica)
+          # digest
+          # ntlm
+          'auth': ['rwspu', 'restws']
+        # Solo para los tests
+        # son los campos que aparecen por pantalla
+        'test-data':
+          'proc': 'MONEDAS'
+          'json-login': '{"p_usuario": ""
+                         ,"p_enc_pwd": ""}'
+          'json-out': '{"id_sesion":"12345678"}'
+      'cotiz-autos'  :
+        'login-url': 'https://testing.laholando.com:10443/ords/rws/spa_pruebas_jwt/LOGIN'
+        'forward-url' : 'https://testing.laholando.com:10443/ords/rws/spa_rws_cotiz_autos'
+        'headers-extra' : ~
+        'params':
+          'verify': false
+          'auth': ['rwspu', 'restws']
+        'test-data':
+          'proc': 'SPR_OBTENER_DATOS'
+          'json-login': '{"p_usuario": ""
+                         ,"p_enc_pwd": ""}'
+          'json-out': '{"p_codia":"0003091"        
+                       ,"p_anio":"2016"            
+                       ,"p_cod_postal":"2700"      
+                       ,"p_edad":"26"              
+                       ,"p_cod_prod":"9083"        
+                       ,"p_gnc":"N"                
+                       ,"p_suma_accesorios":"0"    
+                       ,"p_adicionales":"0"        
+                       ,"p_cod_iva":"S"            
+                       ,"p_grabar_cotizacion":"S"  
+                       ,"p_pct_buen_resultado":"0" 
+                       ,"p_pct_cliente_integral":"0"}'
+
+
