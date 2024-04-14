@@ -2,10 +2,10 @@
     "type": "project",
     "license": "proprietary",
     "require": {
-        "php": "^7.1.3",
+        "php": "^8.3.4",
         "ext-iconv": "*",
         "guzzlehttp/guzzle": "^6.3",
-        "lakion/api-test-case": "^3.1",
+        "lakion/api-test-case": "*",
         "lexik/jwt-authentication-bundle": "^2.4",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/apache-pack": "^1.0",
@@ -27,7 +27,10 @@
         "preferred-install": {
             "*": "dist"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "symfony/flex": true
+        }
     },
     "autoload": {
         "psr-4": {
